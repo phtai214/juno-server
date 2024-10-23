@@ -23,10 +23,10 @@ app.get('/', (req, res) => {
 
 
 const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'juno'
+  host: "localhost",
+  user: "root",
+  password: "Taidtry@204",
+  database: "juno",
 });
 
 connection.connect((err) => {
