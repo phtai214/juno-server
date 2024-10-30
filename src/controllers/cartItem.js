@@ -35,6 +35,19 @@ export const fetchCartItemById = async (req, res) => {
     }
 };
 
+// Get CartItems by Cart ID
+export const fetchCartItemsByCartId = async (req, res) => {
+    try {
+        const cartId = req.params.cartId;
+        const cartItems = await services.getCartItemsByCartId(cartId);
+        return res.status(200).json(cartItems);
+    } catch (error) {
+        console.error('Error in fetchCartItemsByCartId controller:', error);
+        return res.status(500).json({ error: 'Failed to fetch cart items' });
+    }
+};
+
+
 // Update a CartItem
 export const modifyCartItem = async (req, res) => {
     try {

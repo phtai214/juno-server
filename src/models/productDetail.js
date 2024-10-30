@@ -20,16 +20,8 @@ module.exports = (sequelize) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        height: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
         colors: {
             type: DataTypes.STRING, // Hoặc JSON nếu bạn muốn lưu mảng màu sắc
-            allowNull: false
-        },
-        sizes: {
-            type: DataTypes.STRING, // Hoặc JSON nếu bạn muốn lưu mảng kích cỡ
             allowNull: false
         },
         origin: {

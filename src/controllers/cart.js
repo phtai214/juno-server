@@ -34,7 +34,16 @@ export const fetchCartById = async (req, res) => {
         return res.status(404).json({ error: 'Cart not found' });
     }
 };
-
+export const fetchCartByUserId = async (req, res) => {
+    try {
+        const userId = req.params.userId; // Lấy userId từ params
+        const cart = await services.getCartByUserId(userId);
+        return res.status(200).json(cart);
+    } catch (error) {
+        console.error('Error in fetchCartByUserId controller:', error);
+        return res.status(404).json({ error: 'Cart not found for this user' });
+    }
+};
 // Update a Cart
 export const modifyCart = async (req, res) => {
     try {

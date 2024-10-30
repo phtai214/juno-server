@@ -40,6 +40,20 @@ export const getCartItemById = async (cartItemId) => {
     }
 };
 
+// Get CartItems by Cart ID
+export const getCartItemsByCartId = async (cartId) => {
+    try {
+        const cartItems = await db.CartItem.findAll({
+            where: { cart_id: cartId }, // Lọc theo cart_id
+            include: ['cart', 'product'] // Bao gồm các mô hình liên quan
+        });
+        return cartItems;
+    } catch (error) {
+        console.error('Error fetching cart items by cart ID:', error);
+        throw error;
+    }
+};
+
 // Update a CartItem
 export const updateCartItem = async (cartItemId, updatedData) => {
     try {

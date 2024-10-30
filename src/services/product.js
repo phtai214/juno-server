@@ -64,9 +64,7 @@ export const createNewProduct = async ({ name, description, price, quantity, cat
                 product_code: productDetails.product_code,
                 design: productDetails.design,
                 material: productDetails.material,
-                height: productDetails.height,
                 colors: productDetails.colors,
-                sizes: productDetails.sizes,
                 origin: productDetails.origin,
                 vat_included: productDetails.vat_included,
                 productId: newProduct.id
@@ -145,21 +143,22 @@ export const getProductById = async (id) => {
 export const getProductBySlug = async (slug) => {
     try {
         const product = await db.Product.findOne({
-            where: { slug },
+            where: { slug }, // Sử dụng where để tìm theo slug
             include: [{
                 model: db.Variation,
                 required: false
             }]
         });
         if (!product) {
+            console.error(`Product not found for slug: ${slug}`); // Log thêm thông tin
             throw new Error('Product not found');
         }
         return product;
     } catch (error) {
+        console.error('Error in getProductBySlug:', error); // Log lỗi
         throw error;
     }
 };
-
 export const updateProduct = async (id, updatedData) => {
     try {
         const product = await db.Product.findByPk(id);

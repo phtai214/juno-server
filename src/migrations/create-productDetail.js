@@ -21,16 +21,12 @@ module.exports = {
                 type: Sequelize.STRING,
                 allowNull: false
             },
-            height: {
+            colors: {
                 type: Sequelize.STRING,
                 allowNull: false
             },
-            colors: {
-                type: Sequelize.STRING, // Bạn có thể sử dụng Sequelize.JSON nếu muốn lưu dạng mảng
-                allowNull: false
-            },
             sizes: {
-                type: Sequelize.STRING, // Bạn có thể sử dụng Sequelize.JSON nếu muốn lưu dạng mảng
+                type: Sequelize.STRING,
                 allowNull: false
             },
             origin: {

@@ -5,7 +5,7 @@ const cloudinary = require('cloudinary').v2;
 export const handleCreateNewProduct = async (req, res) => {
     const fileData = req.files;
     const { name, description, price, quantity, category, variations } = req.body; // Lấy các trường khác
-    const { product_code, design, material, height, colors, sizes, origin, vat_included } = req.body.productDetails;
+    const { product_code, design, material, colors, origin, vat_included } = req.body.productDetails;
 
     // Lấy hình ảnh chính và bổ sung
     const image = fileData['image'] ? fileData['image'][0].path : null;
@@ -30,14 +30,12 @@ export const handleCreateNewProduct = async (req, res) => {
             product_code: Joi.string().required(),
             design: Joi.string().required(),
             material: Joi.string().required(),
-            height: Joi.string().required(),
             colors: Joi.string().required(),
-            sizes: Joi.string().required(),
             origin: Joi.string().required(),
             vat_included: Joi.boolean().required()
         });
 
-        const { error } = productSchema.validate({ name, description, price, quantity, category, variations, design, material, height, colors, sizes, origin, vat_included, product_code });
+        const { error } = productSchema.validate({ name, description, price, quantity, category, variations, design, material, colors, origin, vat_included, product_code });
 
         // Xử lý biến thể
         const variationsData = variations.map((variation, index) => ({
@@ -57,9 +55,7 @@ export const handleCreateNewProduct = async (req, res) => {
             product_code,
             design,
             material,
-            height,
             colors,
-            sizes,
             origin,
             vat_included
         };

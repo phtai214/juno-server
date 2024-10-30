@@ -5,6 +5,7 @@ module.exports = (sequelize) => {
         static associate(models) {
             // Định nghĩa mối quan hệ với User
             Cart.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
+            Cart.hasMany(models.CartItem, { foreignKey: 'cart_id', as: 'cartItems' });
         }
     }
 
@@ -25,13 +26,15 @@ module.exports = (sequelize) => {
         updated_at: {
             type: DataTypes.DATE,
             allowNull: false,
-            defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
+            defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
         }
     }, {
         sequelize,
         modelName: 'Cart',
-        tableName: 'Carts', // Tên bảng trong cơ sở dữ liệu
-        timestamps: false // Tắt timestamps tự động của Sequelize
+        tableName: 'Carts',
+        timestamps: true, // Bật timestamps tự động của Sequelize
+        createdAt: 'created_at', // Tên trường trong DB
+        updatedAt: 'updated_at'  // Tên trường trong DB
     });
 
     return Cart;

@@ -12,6 +12,7 @@ module.exports = {
             user_id: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
+                unique: true, // Đảm bảo mỗi user_id chỉ xuất hiện một lần
                 references: {
                     model: 'Users', // Tên bảng liên kết
                     key: 'id' // Khóa chính của bảng Users
@@ -19,13 +20,13 @@ module.exports = {
             },
             created_at: {
                 allowNull: false,
-                type: Sequelize.DATE,
+                type: 'TIMESTAMP',
                 defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
             },
             updated_at: {
                 allowNull: false,
-                type: Sequelize.DATE,
-                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
+                type: 'TIMESTAMP',
+                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
             }
         });
     },

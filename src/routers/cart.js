@@ -12,6 +12,7 @@ router.get('/carts', controllers.fetchAllCarts);
 router.get('/carts/:id', controllers.fetchCartById);
 router.put('/carts/:id', controllers.modifyCart);
 router.delete('/carts/:id', controllers.removeCart);
+router.get('/user/:userId', controllers.fetchCartByUserId);
 
 
 

@@ -29,15 +29,18 @@ module.exports = {
                 type: Sequelize.INTEGER,
                 allowNull: false
             },
-            createdAt: {
-                allowNull: false,
-                type: Sequelize.DATE,
-                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+            color: {
+                type: Sequelize.STRING,
+                allowNull: false
             },
-            updatedAt: {
+
+            created_at: {
                 allowNull: false,
-                type: Sequelize.DATE,
-                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
+                type: 'TIMESTAMP', defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+            },
+            updated_at: {
+                allowNull: false,
+                type: 'TIMESTAMP', defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
             }
         });
     },

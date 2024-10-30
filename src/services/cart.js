@@ -40,6 +40,23 @@ export const getCartById = async (cartId) => {
     }
 };
 
+// Get Cart by User ID
+export const getCartByUserId = async (userId) => {
+    try {
+        const cart = await db.Cart.findOne({
+            where: { user_id: userId },
+            include: ['user', 'cartItems'] // Include related models User and CartItems
+        });
+        if (!cart) {
+            throw new Error('Cart not found for this user');
+        }
+        return cart;
+    } catch (error) {
+        console.error('Error fetching cart by user ID:', error);
+        throw error;
+    }
+};
+
 // Update a Cart
 export const updateCart = async (cartId, updatedData) => {
     try {
