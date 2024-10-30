@@ -3,40 +3,82 @@ import Joi from 'joi';
 const cloudinary = require('cloudinary').v2;
 
 export const handleCreateNewProduct = async (req, res) => {
-    const fileData = req.files; // Lấy các file ảnh
-    const { name, description, price, quantity, category, variations } = req.body; // Các trường từ form
+    const fileData = req.files;
+    const { name, description, price, quantity, category, variations } = req.body; // Lấy các trường khác
+    const { product_code, design, material, height, colors, sizes, origin, vat_included } = req.body.productDetails;
+
+    // Lấy hình ảnh chính và bổ sung
+    const image = fileData['image'] ? fileData['image'][0].path : null;
+    const productImages = fileData['productImages'] ? fileData['productImages'].map(file => file.path) : [];
 
     try {
         // Validate dữ liệu đầu vào
-        const schema = Joi.object({
+        const productSchema = Joi.object({
             name: Joi.string().required(),
             description: Joi.string().required(),
             price: Joi.number().required(),
             quantity: Joi.number().required(),
             category: Joi.string().required(),
-            variations: Joi.array().items(Joi.object({
-                size: Joi.string().required(),
-                color: Joi.string().required(),
-                imageUrl: Joi.string().uri(), // Kiểm tra URL hình ảnh nếu có
-                quantity: Joi.number().required()
-            })).required() // Đảm bảo rằng biến thể là bắt buộc
+            variations: Joi.array().items(
+                Joi.object({
+                    size: Joi.string().required(),
+                    color: Joi.string().required(),
+                    quantity: Joi.number().required(),
+                    imageUrl: Joi.string().uri().optional() // Chỉnh sửa ở đây để cho phép không có hình ảnh
+                })
+            ).required(),
+            product_code: Joi.string().required(),
+            design: Joi.string().required(),
+            material: Joi.string().required(),
+            height: Joi.string().required(),
+            colors: Joi.string().required(),
+            sizes: Joi.string().required(),
+            origin: Joi.string().required(),
+            vat_included: Joi.boolean().required()
         });
 
-        const { error } = schema.validate({ name, description, price, quantity, category, variations });
+        const { error } = productSchema.validate({ name, description, price, quantity, category, variations, design, material, height, colors, sizes, origin, vat_included, product_code });
+
+        // Xử lý biến thể
+        const variationsData = variations.map((variation, index) => ({
+            size: variation.size,
+            color: variation.color,
+            quantity: variation.quantity,
+            imageUrl: fileData[`variations[${index}][image]`] ? fileData[`variations[${index}][image]`][0].path : null
+        }));
+
         if (error) {
-            if (fileData) {
-                fileData.forEach(file => cloudinary.uploader.destroy(file.filename));
-            }
+            console.log('Validation Error:', error.details);
             return res.status(400).json({ error: error.details[0].message });
         }
 
-        // Gọi service createNewProduct và truyền fileData
-        const result = await services.createNewProduct(req.body, fileData);
-        return res.status(200).json(result);
+        // Tạo chi tiết sản phẩm
+        const productDetails = {
+            product_code,
+            design,
+            material,
+            height,
+            colors,
+            sizes,
+            origin,
+            vat_included
+        };
+
+        // Gọi service createNewProduct và truyền thêm productDetails
+        const result = await services.createNewProduct({
+            name,
+            description,
+            price,
+            quantity,
+            category,
+            variations: variationsData,
+            image, // Thêm ảnh chính vào dữ liệu
+            productImages, // Thêm các hình ảnh bổ sung vào dữ liệu
+            productDetails // Thêm chi tiết sản phẩm
+        });
+
+        return res.status(201).json(result); // Trả về mã 201 khi tạo thành công
     } catch (error) {
-        if (fileData) {
-            fileData.forEach(file => cloudinary.uploader.destroy(file.filename));
-        }
         res.status(500).json({ error: 'Internal Server Error' });
         console.log(error);
     }

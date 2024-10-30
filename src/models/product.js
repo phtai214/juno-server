@@ -4,6 +4,8 @@ module.exports = (sequelize) => {
     class Product extends Model {
         static associate(models) {
             Product.hasMany(models.Variation, { foreignKey: 'productId' });
+            Product.hasOne(models.ProductDetail, { foreignKey: 'productId' }); // Mối quan hệ với ProductDetail
+            Product.hasMany(models.Review, { foreignKey: 'product_id', as: 'reviews' });
         }
     }
 

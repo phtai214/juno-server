@@ -2,9 +2,8 @@
 import db from '../models';
 const cloudinary = require('cloudinary').v2;
 
-export const createNewProduct = async ({ name, description, price, quantity, category }, fileData) => {
+export const createNewProduct = async ({ name, description, price, quantity, category, variations, image, productImages, productDetails }) => {
     try {
-        // Tạo id ngẫu nhiên cho sản phẩm
         const generateRandomNumber = () => {
             const min = Math.pow(10, 5); // 100,000
             const max = Math.pow(10, 6) - 1; // 999,999
@@ -12,15 +11,22 @@ export const createNewProduct = async ({ name, description, price, quantity, cat
         };
         const newId = `${generateRandomNumber()}`;
 
-        // Upload các file ảnh lên Cloudinary
+        // Tạo slug
+        const slug = createSlug(name);
+
+        // Upload ảnh chính lên Cloudinary
+        const uploadedMainImage = image ? await cloudinary.uploader.upload(image) : null;
+
+        // Upload các file ảnh bổ sung lên Cloudinary
         const uploadedImages = [];
-        if (fileData && fileData.length > 0) {
-            for (let file of fileData) {
-                const result = await cloudinary.uploader.upload(file.path);
-                uploadedImages.push(result.secure_url); // Lưu đường dẫn ảnh đã upload
+        if (productImages && productImages.length > 0) {
+            for (let file of productImages) {
+                const result = await cloudinary.uploader.upload(file);
+                uploadedImages.push(result.secure_url);
             }
         }
 
+        // Tạo sản phẩm mới
         const newProduct = await db.Product.create({
             id: newId,
             name,
@@ -28,25 +34,48 @@ export const createNewProduct = async ({ name, description, price, quantity, cat
             price,
             quantity,
             category,
-            image_url: JSON.stringify(uploadedImages),
+            slug, // Sử dụng slug đã tạo
+            image_url: uploadedMainImage ? uploadedMainImage.secure_url : null,
+            additional_images: JSON.stringify(uploadedImages),
         });
 
         // Tạo các biến thể cho sản phẩm
         if (variations && variations.length > 0) {
             for (const variation of variations) {
+                let variationImageUrl = null;
+                if (variation.imageUrl) {
+                    const uploadedVariationImage = await cloudinary.uploader.upload(variation.imageUrl);
+                    variationImageUrl = uploadedVariationImage.secure_url;
+                }
+
                 await db.Variation.create({
                     productId: newProduct.id,
                     size: variation.size,
                     color: variation.color,
-                    imageUrl: variation.imageUrl,
+                    imageUrl: variationImageUrl,
                     quantity: variation.quantity,
                 });
             }
         }
 
+        // Tạo chi tiết sản phẩm
+        if (productDetails) {
+            await db.ProductDetail.create({
+                product_code: productDetails.product_code,
+                design: productDetails.design,
+                material: productDetails.material,
+                height: productDetails.height,
+                colors: productDetails.colors,
+                sizes: productDetails.sizes,
+                origin: productDetails.origin,
+                vat_included: productDetails.vat_included,
+                productId: newProduct.id
+            });
+        }
+
         return {
             err: 0,
-            mes: 'Product created successfully.',
+            mes: 'Product and details created successfully.',
             product: newProduct,
         };
     } catch (error) {
@@ -54,6 +83,17 @@ export const createNewProduct = async ({ name, description, price, quantity, cat
         throw error;
     }
 };
+
+
+// Hàm tạo slug từ tên sản phẩm
+export function createSlug(name) {
+    return name
+        .toLowerCase()
+        .replace(/\s+/g, '-')        // Thay thế khoảng trắng bằng dấu '-'
+        .replace(/[^\w\-]+/g, '')    // Loại bỏ các ký tự đặc biệt
+        .replace(/\-\-+/g, '-')      // Thay thế nhiều dấu '-' liên tiếp bằng một dấu '-'
+        .trim();
+}
 
 export const getAllProducts = async (page, limit = 10) => {
     try {
@@ -141,6 +181,44 @@ export const deleteProduct = async (id) => {
         }
         await product.destroy();
         return { message: 'Product deleted successfully' };
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const getVariationsByProductId = async (productId) => {
+    try {
+        const variations = await db.Variation.findAll({
+            where: { productId },
+        });
+        return variations;
+    } catch (error) {
+        console.log('Error fetching variations:', error);
+        throw error;
+    }
+};
+
+export const updateVariation = async (id, updatedData) => {
+    try {
+        const variation = await db.Variation.findByPk(id);
+        if (!variation) {
+            throw new Error('Variation not found');
+        }
+        await variation.update(updatedData);
+        return variation;
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const deleteVariation = async (id) => {
+    try {
+        const variation = await db.Variation.findByPk(id);
+        if (!variation) {
+            throw new Error('Variation not found');
+        }
+        await variation.destroy();
+        return { message: 'Variation deleted successfully' };
     } catch (error) {
         throw error;
     }

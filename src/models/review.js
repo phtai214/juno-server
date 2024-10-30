@@ -6,6 +6,7 @@ module.exports = (sequelize) => {
             // Định nghĩa mối quan hệ với User và Product
             Review.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
             Review.belongsTo(models.Product, { foreignKey: 'product_id', as: 'product' });
+
         }
     }
 

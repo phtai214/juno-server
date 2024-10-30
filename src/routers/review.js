@@ -7,11 +7,11 @@ const router = Router();
 
 router.use(express.json());
 
-router.post('/reviews', controllers.createNewReview);
-router.get('/reviews', controllers.fetchAllReviews);
-router.get('/reviews/:id', controllers.fetchReviewById);
-router.put('/reviews/:id', controllers.modifyReview);
-router.delete('/reviews/:id', controllers.removeReview);
+router.post('/', controllers.createNewReview);
+router.get('/', controllers.fetchAllReviews);
+router.get('/:id', controllers.fetchReviewById);
+router.put('/:id', controllers.modifyReview);
+router.delete('/:id', controllers.removeReview);
 
 
 export default router;

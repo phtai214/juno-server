@@ -11,7 +11,7 @@ router.use(express.json());
 router.post('/', controllers.creatUser);
 router.get('/', controllers.getAllUser);
 router.get('/:id', controllers.getUserById);
-router.put('/:id', uploadCloud.single('file'), controllers.updateUser);
+router.put('/:id', controllers.updateUser);
 router.delete('/:id', controllers.deleteUser);
 
 

@@ -18,7 +18,7 @@ export const getAllOrders = async (page, limit = 10) => {
             offset: skip,
             limit: limit
         });
-        const totalOrders = await Order.count();
+        const totalOrders = await db.Order.count();
         const totalPages = Math.ceil(totalOrders / limit);
 
         return {
