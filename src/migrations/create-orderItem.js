@@ -17,12 +17,12 @@ module.exports = {
                     key: 'id' // Khóa chính của bảng Orders
                 }
             },
-            product_id: {
+            variation_id: { // Khóa ngoại tới bảng Variations
                 type: Sequelize.INTEGER,
                 allowNull: false,
                 references: {
-                    model: 'Products', // Tên bảng liên kết
-                    key: 'id' // Khóa chính của bảng Products
+                    model: 'Variations', // Tên bảng liên kết
+                    key: 'id' // Khóa chính của bảng Variations
                 }
             },
             quantity: {

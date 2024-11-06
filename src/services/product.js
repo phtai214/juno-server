@@ -26,6 +26,7 @@ export const createNewProduct = async ({ name, description, price, quantity, cat
             }
         }
 
+
         // Tạo sản phẩm mới
         const newProduct = await db.Product.create({
             id: newId,
@@ -39,28 +40,10 @@ export const createNewProduct = async ({ name, description, price, quantity, cat
             additional_images: JSON.stringify(uploadedImages),
         });
 
-        // Tạo các biến thể cho sản phẩm
-        if (variations && variations.length > 0) {
-            for (const variation of variations) {
-                let variationImageUrl = null;
-                if (variation.imageUrl) {
-                    const uploadedVariationImage = await cloudinary.uploader.upload(variation.imageUrl);
-                    variationImageUrl = uploadedVariationImage.secure_url;
-                }
-
-                await db.Variation.create({
-                    productId: newProduct.id,
-                    size: variation.size,
-                    color: variation.color,
-                    imageUrl: variationImageUrl,
-                    quantity: variation.quantity,
-                });
-            }
-        }
-
         // Tạo chi tiết sản phẩm
+        let createdProductDetailId = null;
         if (productDetails) {
-            await db.ProductDetail.create({
+            const productDetail = await db.ProductDetail.create({
                 product_code: productDetails.product_code,
                 design: productDetails.design,
                 material: productDetails.material,
@@ -68,6 +51,29 @@ export const createNewProduct = async ({ name, description, price, quantity, cat
                 origin: productDetails.origin,
                 vat_included: productDetails.vat_included,
                 productId: newProduct.id
+            });
+            createdProductDetailId = productDetail.id; // Lưu ID của chi tiết sản phẩm
+        }
+
+        // Tạo các biến thể cho sản phẩm
+        const uploadedVariationImages = await Promise.all(variations.map(async (variation) => {
+            if (variation.imageUrl) {
+                const uploadedVariationImage = await cloudinary.uploader.upload(variation.imageUrl);
+                variation.imageUrl = uploadedVariationImage.secure_url;
+            } else {
+                variation.imageUrl = null;
+            }
+            return variation;
+        }));
+
+        for (const variation of uploadedVariationImages) {
+            await db.Variation.create({
+                productId: newProduct.id,
+                productDetailId: createdProductDetailId,
+                size: variation.size,
+                color: variation.color,
+                imageUrl: variation.imageUrl,
+                quantity: variation.quantity,
             });
         }
 
@@ -81,7 +87,6 @@ export const createNewProduct = async ({ name, description, price, quantity, cat
         throw error;
     }
 };
-
 
 // Hàm tạo slug từ tên sản phẩm
 export function createSlug(name) {

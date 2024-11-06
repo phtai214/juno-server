@@ -12,6 +12,6 @@ router.get('/', controllers.fetchAllReviews);
 router.get('/:id', controllers.fetchReviewById);
 router.put('/:id', controllers.modifyReview);
 router.delete('/:id', controllers.removeReview);
-
+router.get('/product/:productId', controllers.getReviewsByProductId);
 
 export default router;

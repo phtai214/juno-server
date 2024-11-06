@@ -16,7 +16,14 @@ export const getAllOrders = async (page, limit = 10) => {
         const skip = (page - 1) * limit;
         const orders = await db.Order.findAll({
             offset: skip,
-            limit: limit
+            limit: limit,
+            include: [
+                {
+                    model: db.User,
+                    as: 'user', // Tên alias đã định nghĩa trong mối quan hệ
+                    attributes: ['id', 'name', 'email', 'address'] // Chọn các thuộc tính cần thiết từ bảng User
+                }
+            ]
         });
         const totalOrders = await db.Order.count();
         const totalPages = Math.ceil(totalOrders / limit);
@@ -34,15 +41,44 @@ export const getAllOrders = async (page, limit = 10) => {
 };
 
 // Get order by ID
+
 export const getOrderById = async (orderId) => {
     try {
-        const order = await db.Order.findByPk(orderId);
+        const order = await db.Order.findOne({
+            where: { id: orderId }, // Điều kiện tìm kiếm
+            include: [
+                {
+                    model: db.User,
+                    as: 'user', // Tên alias đã định nghĩa trong mối quan hệ
+                    attributes: ['id', 'name', 'email', 'address', 'phonenumber'] // Chọn các thuộc tính cần thiết từ bảng User
+                }
+            ]
+        });
+
         if (!order) {
             throw new Error('Order not found');
         }
+
         return order;
     } catch (error) {
         console.error('Error fetching order by ID:', error);
+        throw error;
+    }
+};
+
+export const getOrderByUserId = async (userId) => {
+    try {
+        const orders = await db.Order.findAll({
+            where: { user_id: userId }, // Lọc theo userId
+        });
+
+        if (orders.length === 0) {
+            throw new Error('No orders found for this user ID');
+        }
+
+        return orders;
+    } catch (error) {
+        console.error('Error fetching orders by user ID:', error);
         throw error;
     }
 };

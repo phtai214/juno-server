@@ -19,6 +19,16 @@ module.exports = {
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
             },
+            productDetailId: { // Thêm trường productDetailId
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                references: {
+                    model: 'ProductDetails', // Tên bảng chi tiết sản phẩm
+                    key: 'id'
+                },
+                onUpdate: 'CASCADE',
+                onDelete: 'CASCADE'
+            },
             size: {
                 type: Sequelize.STRING,
                 allowNull: false

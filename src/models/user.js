@@ -22,7 +22,7 @@ module.exports = (sequelize) => {
             allowNull: false
         },
         role: {
-            type: DataTypes.ENUM('admin', 'user', 'employee'), // Định nghĩa 3 giá trị có thể cho role
+            type: DataTypes.ENUM('admin', 'user', 'employee'), // Định nghĩa các giá trị có thể có cho role
             defaultValue: 'user', // Giá trị mặc định là 'user'
             allowNull: false
         },
@@ -36,6 +36,20 @@ module.exports = (sequelize) => {
         address: {
             type: DataTypes.STRING,
             allowNull: true
+        },
+        status: {
+            type: DataTypes.ENUM('active', 'inactive'), // Định nghĩa trạng thái
+            defaultValue: 'active', // Giá trị mặc định là 'active'
+            allowNull: false
+        },
+        position: {
+            type: DataTypes.STRING, // Chức vụ của nhân viên (manager, assistant, etc.)
+            allowNull: true
+        },
+        permissions: {
+            type: DataTypes.JSON, // Lưu quyền hạn dưới dạng JSON
+            allowNull: true,
+            defaultValue: {} // Khởi tạo quyền hạn mặc định là đối tượng rỗng
         }
     }, {
         sequelize,

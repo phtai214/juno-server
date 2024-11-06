@@ -1,4 +1,43 @@
 import db from "../models/index";
+import axios from 'axios';
+import crypto from 'crypto';
+
+const partnerCode = 'MOMO';
+const accessKey = 'F8BBA842ECF85';
+const secretKey = 'K951B6PE1waDMi640xX08PD3vg6EkVlz';
+
+export const createPayment = async (amount, orderInfo, redirectUrl, ipnUrl) => {
+    const requestId = partnerCode + new Date().getTime();
+    const orderId = requestId;
+    const requestType = 'captureWallet';
+    const extraData = '';
+
+    const rawSignature = `accessKey=${accessKey}&amount=${amount}&extraData=${extraData}&ipnUrl=${ipnUrl}&orderId=${orderId}&orderInfo=${orderInfo}&partnerCode=${partnerCode}&redirectUrl=${redirectUrl}&requestId=${requestId}&requestType=${requestType}`;
+
+    const signature = crypto.createHmac('sha256', secretKey).update(rawSignature).digest('hex');
+
+    const requestBody = {
+        partnerCode,
+        accessKey,
+        requestId,
+        amount,
+        orderId,
+        orderInfo,
+        redirectUrl,
+        ipnUrl,
+        extraData,
+        requestType,
+        signature,
+        lang: 'vi',
+    };
+
+    try {
+        const response = await axios.post('https://test-payment.momo.vn/v2/gateway/api/create', requestBody);
+        return response.data;
+    } catch (error) {
+        throw new Error('Payment processing error: ' + error.message);
+    }
+};
 
 // Create a new transaction
 export const createTransaction = async (transactionData) => {

@@ -5,7 +5,7 @@ module.exports = (sequelize) => {
         static associate(models) {
             // Định nghĩa mối quan hệ với Cart và Product
             CartItem.belongsTo(models.Cart, { foreignKey: 'cart_id', as: 'cart' });
-            CartItem.belongsTo(models.Product, { foreignKey: 'product_id', as: 'product' });
+            CartItem.belongsTo(models.Variation, { foreignKey: 'variation_id', as: 'variation' });
         }
     }
 
@@ -18,27 +18,23 @@ module.exports = (sequelize) => {
                 key: 'id' // Khóa chính của bảng Carts
             }
         },
-        product_id: {
+        variation_id: { // Sửa đổi trường khóa ngoại
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: 'Products', // Tên bảng liên kết
-                key: 'id' // Khóa chính của bảng Products
+                model: 'Variations', // Kết nối tới bảng Variations
+                key: 'id'
             }
         },
         quantity: {
             type: DataTypes.INTEGER,
             allowNull: false
         },
-        color: {
-            type: DataTypes.STRING,
-            allowNull: false
-        }
     }, {
         sequelize,
         modelName: 'CartItem',
-        tableName: 'CartItems', // Tên bảng trong cơ sở dữ liệu
-        timestamps: false // Tắt timestamps tự động của Sequelize
+        tableName: 'CartItems',
+        timestamps: false
     });
 
     return CartItem;

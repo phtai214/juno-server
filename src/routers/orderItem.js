@@ -8,11 +8,12 @@ const router = Router();
 
 router.use(express.json());
 
-router.post('/order-items', controllers.createNewOrderItem);
-router.get('/order-items', controllers.fetchAllOrderItems);
-router.get('/order-items/:id', controllers.fetchOrderItemById);
-router.put('/order-items/:id', controllers.modifyOrderItem);
-router.delete('/order-items/:id', controllers.removeOrderItem);
+router.post('/', controllers.createNewOrderItem);
+router.get('/', controllers.fetchAllOrderItems);
+router.get('/:id', controllers.fetchOrderItemById);
+router.get('/order/:orderId', controllers.fetchOrderItems);
+router.put('/:id', controllers.modifyOrderItem);
+router.delete('/:id', controllers.removeOrderItem);
 
 
 

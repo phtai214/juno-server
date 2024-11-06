@@ -21,10 +21,6 @@ module.exports = {
                 type: Sequelize.STRING,
                 allowNull: false
             },
-            colors: {
-                type: Sequelize.STRING,
-                allowNull: false
-            },
             sizes: {
                 type: Sequelize.STRING,
                 allowNull: false

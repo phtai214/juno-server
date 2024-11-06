@@ -24,7 +24,7 @@ export const handleCreateNewProduct = async (req, res) => {
                     size: Joi.string().required(),
                     color: Joi.string().required(),
                     quantity: Joi.number().required(),
-                    imageUrl: Joi.string().uri().optional() // Chỉnh sửa ở đây để cho phép không có hình ảnh
+                    imageUrl: Joi.string().optional() // Chỉnh sửa ở đây để cho phép không có hình ảnh
                 })
             ).required(),
             product_code: Joi.string().required(),

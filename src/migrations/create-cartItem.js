@@ -17,30 +17,27 @@ module.exports = {
                     key: 'id' // Khóa chính của bảng Carts
                 }
             },
-            product_id: {
+            variation_id: { // Khóa ngoại tới bảng Variations
                 type: Sequelize.INTEGER,
                 allowNull: false,
                 references: {
-                    model: 'Products', // Tên bảng liên kết
-                    key: 'id' // Khóa chính của bảng Products
+                    model: 'Variations', // Tên bảng liên kết
+                    key: 'id' // Khóa chính của bảng Variations
                 }
             },
             quantity: {
                 type: Sequelize.INTEGER,
                 allowNull: false
             },
-            color: {
-                type: Sequelize.STRING,
-                allowNull: false
-            },
-
             created_at: {
                 allowNull: false,
-                type: 'TIMESTAMP', defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+                type: 'TIMESTAMP',
+                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
             },
             updated_at: {
                 allowNull: false,
-                type: 'TIMESTAMP', defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+                type: 'TIMESTAMP',
+                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
             }
         });
     },

@@ -12,7 +12,7 @@ router.get('/', controllers.fetchAllOrders);
 router.get('/:id', controllers.fetchOrderById);
 router.put('/:id', controllers.modifyOrder);
 router.delete('/:id', controllers.removeOrder);
-
+router.get('/users/:userId', controllers.fetchOrdersByUserId);
 
 
 export default router;

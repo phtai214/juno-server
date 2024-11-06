@@ -31,7 +31,7 @@ export const signup = async ({ name, email, password }) => {
         }
 
         const hashedPassword = await hashPassword(password);
-
+        console.log('Hashed Password:', hashedPassword);
         const newUser = await createNewUser({
             name,
             email,
@@ -171,7 +171,8 @@ export const login = async ({ email, password, res }) => {
             };
         }
 
-        const passwordMatch = await bcrypt.compare(password, user.password);
+
+        const passwordMatch = bcrypt.compare(password, user.password);
 
         if (!passwordMatch) {
             return {

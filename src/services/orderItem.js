@@ -1,8 +1,14 @@
-import db from "../models/index"
+import db from "../models/index";
+
 // Create new OrderItem
-export const createOrderItem = async (orderItemData) => {
+export const createOrderItem = async (orderItems) => {
     try {
-        const newOrderItem = await db.OrderItem.create(orderItemData);
+        const newOrderItem = await db.OrderItem.create({
+            order_id: orderItems.order_id,
+            variation_id: orderItems.variation_id,
+            quantity: orderItems.quantity,
+            price: orderItems.price,
+        });
         return newOrderItem;
     } catch (error) {
         console.error('Error creating order item:', error);
@@ -50,6 +56,36 @@ export const getOrderItemById = async (orderItemId) => {
     }
 };
 
+// Get OrderItems by Order ID
+export const getOrderItemByOrderId = async (orderId) => {
+    try {
+        const orderItems = await db.OrderItem.findAll({
+            where: { order_id: orderId },
+            include: [
+                {
+                    model: db.Variation,
+                    as: 'variation',
+                    include: [
+                        {
+                            model: db.Product,
+                            as: 'product',
+                            attributes: ['id', 'name']
+                        }
+                    ]
+                }
+            ]
+        });
+
+        if (orderItems.length === 0) {
+            throw new Error('No order items found for this order ID');
+        }
+
+        return orderItems;
+    } catch (error) {
+        console.error('Error fetching order items by order ID:', error);
+        throw error;
+    }
+};
 // Update an OrderItem
 export const updateOrderItem = async (orderItemId, updatedData) => {
     try {

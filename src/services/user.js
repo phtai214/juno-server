@@ -78,14 +78,17 @@ export const updateUser = async (userId, newData, fileData) => {
         if (newData.email) {
             user.email = newData.email;
         }
-        if (newData.age) {
-            user.age = newData.age;
+        if (newData.address) {
+            user.address = newData.address;
         }
-        if (newData.gender) {
-            user.gender = newData.gender;
+        if (newData.role) {
+            user.role = newData.role;
         }
         if (newData.phonenumber) {
             user.phonenumber = newData.phonenumber;
+        }
+        if (newData.status) {
+            user.status = newData.status;
         }
         if (fileData !== undefined) {
             user.avatar = fileData.path;
@@ -102,7 +105,6 @@ export const updateUser = async (userId, newData, fileData) => {
         throw error;
     }
 }
-
 export const deleteUser = async (userId) => {
 
     try {
@@ -117,3 +119,46 @@ export const deleteUser = async (userId) => {
         throw error;
     }
 }
+export const updateEmployeePermissions = async (userId, permissions) => {
+    try {
+        const user = await db.User.findOne({ where: { id: userId } });
+        if (!user) {
+            throw new Error('Người dùng không tồn tại');
+        }
+        user.permissions = permissions;
+        await user.save();
+        return user;
+    } catch (error) {
+        console.error('Lỗi khi cập nhật quyền hạn:', error);
+        throw error;
+    }
+};
+
+// Lấy quyền hạn của một nhân viên
+export const getEmployeePermissions = async (userId) => {
+    try {
+        const user = await db.User.findOne({ where: { id: userId } });
+        if (!user) {
+            throw new Error('Người dùng không tồn tại');
+        }
+        return user.permissions;
+    } catch (error) {
+        console.error('Lỗi khi lấy quyền hạn nhân viên:', error);
+        throw error;
+    }
+};
+
+// Xóa một nhân viên
+export const deleteEmployee = async (userId) => {
+    try {
+        const user = await db.User.findOne({ where: { id: userId } });
+        if (!user) {
+            throw new Error('Người dùng không tồn tại');
+        }
+        await user.destroy();
+        return { message: 'Xóa người dùng thành công' };
+    } catch (error) {
+        console.error('Lỗi khi xóa người dùng:', error);
+        throw error;
+    }
+};

@@ -40,6 +40,27 @@ export const getReviewById = async (reviewId) => {
     }
 };
 
+export const getReviewByProductId = async (productId, userId) => {
+    try {
+        const reviews = await db.Review.findAll({
+            where: {
+                product_id: productId,
+            },
+            include: ['user', 'product']
+
+        });
+
+        if (reviews.length === 0) {
+            throw new Error('No reviews found for this product ID');
+        }
+
+        return reviews;
+    } catch (error) {
+        console.error('Error getting reviews by product ID:', error);
+        throw error;
+    }
+};
+
 // Update a Review
 export const updateReview = async (reviewId, updatedData) => {
     try {

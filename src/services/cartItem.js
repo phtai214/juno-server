@@ -15,7 +15,17 @@ export const createCartItem = async (cartItemData) => {
 export const getAllCartItems = async () => {
     try {
         const cartItems = await db.CartItem.findAll({
-            include: ['cart', 'product'] // Include related models Cart and Product
+            include: [
+                { model: db.Cart, as: 'cart' }, // Kết nối tới Cart
+                {
+                    model: db.Variation,
+                    as: 'variation',
+                    include: [
+                        { model: db.Product, as: 'product' }, // Kết nối tới Product
+                        { model: db.ProductDetail, as: 'productDetail' } // Kết nối tới ProductDetail
+                    ]
+                }
+            ]
         });
         return cartItems;
     } catch (error) {
@@ -28,7 +38,17 @@ export const getAllCartItems = async () => {
 export const getCartItemById = async (cartItemId) => {
     try {
         const cartItem = await db.CartItem.findByPk(cartItemId, {
-            include: ['cart', 'product'] // Include related models Cart and Product
+            include: [
+                { model: db.Cart, as: 'cart' }, // Kết nối tới Cart
+                {
+                    model: db.Variation,
+                    as: 'variation',
+                    include: [
+                        { model: db.Product, as: 'product' }, // Kết nối tới Product
+                        { model: db.ProductDetail, as: 'productDetail' } // Kết nối tới ProductDetail
+                    ]
+                }
+            ]
         });
         if (!cartItem) {
             throw new Error('CartItem not found');
@@ -45,7 +65,17 @@ export const getCartItemsByCartId = async (cartId) => {
     try {
         const cartItems = await db.CartItem.findAll({
             where: { cart_id: cartId }, // Lọc theo cart_id
-            include: ['cart', 'product'] // Bao gồm các mô hình liên quan
+            include: [
+                { model: db.Cart, as: 'cart' }, // Kết nối tới Cart
+                {
+                    model: db.Variation,
+                    as: 'variation',
+                    include: [
+                        { model: db.Product, as: 'product' }, // Kết nối tới Product
+                        { model: db.ProductDetail, as: 'productDetail' } // Kết nối tới ProductDetail
+                    ]
+                }
+            ]
         });
         return cartItems;
     } catch (error) {

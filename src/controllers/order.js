@@ -37,6 +37,17 @@ export const fetchOrderById = async (req, res) => {
     }
 };
 
+export const fetchOrdersByUserId = async (req, res) => {
+    const { userId } = req.params; // Lấy userId từ params
+
+    try {
+        const orders = await services.getOrderByUserId(userId);
+        res.status(200).json(orders); // Trả về danh sách đơn hàng
+    } catch (error) {
+        res.status(500).json({ message: error.message }); // Trả về lỗi nếu có
+    }
+};
+
 // Update order
 export const modifyOrder = async (req, res) => {
     try {
