@@ -26,9 +26,17 @@ module.exports = (sequelize) => {
             allowNull: false,
             defaultValue: 'pending' // Giá trị mặc định
         },
+        payment_method: {
+            type: DataTypes.ENUM('cod', 'momo'), // Các phương thức thanh toán
+            allowNull: false // Bắt buộc phải có
+        },
         shipping_address: {
             type: DataTypes.STRING,
             allowNull: false
+        },
+        phone_number: { // Thêm trường phone_number
+            type: DataTypes.STRING, // Hoặc DataTypes.STRING(15) nếu bạn muốn giới hạn độ dài
+            allowNull: false // Bắt buộc phải có
         },
         created_at: {
             type: DataTypes.DATE,
@@ -38,7 +46,7 @@ module.exports = (sequelize) => {
         updated_at: {
             type: DataTypes.DATE,
             allowNull: false,
-            defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
+            defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
         }
     }, {
         sequelize,

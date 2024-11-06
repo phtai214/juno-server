@@ -3,9 +3,9 @@ const { Model, DataTypes } = require('sequelize');
 module.exports = (sequelize) => {
     class OrderItem extends Model {
         static associate(models) {
-            // Định nghĩa mối quan hệ với Order và Product
+            // Định nghĩa mối quan hệ với Order và Variation
             OrderItem.belongsTo(models.Order, { foreignKey: 'order_id', as: 'order' });
-            OrderItem.belongsTo(models.Product, { foreignKey: 'product_id', as: 'product' });
+            OrderItem.belongsTo(models.Variation, { foreignKey: 'variation_id', as: 'variation' });
         }
     }
 
@@ -18,12 +18,12 @@ module.exports = (sequelize) => {
                 key: 'id' // Khóa chính của bảng Orders
             }
         },
-        product_id: {
+        variation_id: { // Thay đổi product_id thành variation_id
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: 'Products', // Tên bảng liên kết
-                key: 'id' // Khóa chính của bảng Products
+                model: 'Variations', // Tên bảng liên kết
+                key: 'id' // Khóa chính của bảng Variations
             }
         },
         quantity: {

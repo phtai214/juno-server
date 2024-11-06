@@ -3,8 +3,8 @@ import * as services from "../services";
 // Create a new OrderItem
 export const createNewOrderItem = async (req, res) => {
     try {
-        const orderItemData = req.body;
-        const newOrderItem = await services.createOrderItem(orderItemData);
+        const orderItems = req.body;
+        const newOrderItem = await services.createOrderItem(orderItems);
         return res.status(201).json(newOrderItem);
     } catch (error) {
         console.error('Error in createNewOrderItem controller:', error);
@@ -34,6 +34,16 @@ export const fetchOrderItemById = async (req, res) => {
     } catch (error) {
         console.error('Error in fetchOrderItemById controller:', error);
         return res.status(404).json({ error: 'Order item not found' });
+    }
+};
+export const fetchOrderItems = async (req, res) => {
+    const { orderId } = req.params; // Lấy orderId từ params
+
+    try {
+        const orderItems = await services.getOrderItemByOrderId(orderId);
+        res.status(200).json(orderItems); // Trả về danh sách order items
+    } catch (error) {
+        res.status(500).json({ message: error.message }); // Trả về lỗi nếu có
     }
 };
 

@@ -12,6 +12,7 @@ router.get('/transactions', controllers.fetchAllTransactions);
 router.get('/transactions/:id', controllers.fetchTransactionById);
 router.put('/transactions/:id', controllers.modifyTransaction);
 router.delete('/transactions/:id', controllers.removeTransaction);
+router.post('/payment/initiate', controllers.initiatePayment);
 
 
 

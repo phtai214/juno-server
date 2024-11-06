@@ -39,7 +39,7 @@ module.exports = {
                 unique: true // Đảm bảo giá trị slug là duy nhất
             },
             tag: {
-                type: Sequelize.JSON, // Thay thế ARRAY bằng JSON để lưu trữ mảng
+                type: Sequelize.JSON,
                 allowNull: true,
                 defaultValue: [] // Mặc định là mảng trống
             },

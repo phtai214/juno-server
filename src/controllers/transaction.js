@@ -1,5 +1,14 @@
 import * as services from "../services";
+export const initiatePayment = async (req, res) => {
+    const { amount, orderInfo, redirectUrl, ipnUrl } = req.body;
 
+    try {
+        const paymentResponse = await services.createPayment(amount, orderInfo, redirectUrl, ipnUrl);
+        res.json(paymentResponse);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 // Create a new transaction
 export const createNewTransaction = async (req, res) => {
     try {

@@ -35,6 +35,17 @@ export const fetchReviewById = async (req, res) => {
     }
 };
 
+export const getReviewsByProductId = async (req, res) => {
+    try {
+        const { productId } = req.params;
+        const reviews = await services.getReviewByProductId(productId);
+        return res.status(200).json(reviews);
+    } catch (error) {
+        console.error('Error in getReviewsByProductId controller:', error);
+        return res.status(500).json({ error: 'Failed to get reviews' });
+    }
+};
+
 // Update a Review
 export const modifyReview = async (req, res) => {
     try {

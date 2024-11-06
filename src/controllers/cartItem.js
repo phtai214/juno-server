@@ -26,20 +26,32 @@ export const fetchAllCartItems = async (req, res) => {
 // Get CartItem by ID
 export const fetchCartItemById = async (req, res) => {
     try {
-        const cartItemId = req.params.id;
+        const cartItemId = req.params.id; // Lấy id từ tham số URL
         const cartItem = await services.getCartItemById(cartItemId);
+
+        // Kiểm tra nếu không tìm thấy cartItem
+        if (!cartItem) {
+            return res.status(404).json({ error: 'CartItem not found' });
+        }
+
         return res.status(200).json(cartItem);
     } catch (error) {
         console.error('Error in fetchCartItemById controller:', error);
-        return res.status(404).json({ error: 'CartItem not found' });
+        return res.status(500).json({ error: 'Failed to fetch cart item' });
     }
 };
 
 // Get CartItems by Cart ID
 export const fetchCartItemsByCartId = async (req, res) => {
     try {
-        const cartId = req.params.cartId;
+        const cartId = req.params.cartId; // Lấy cartId từ tham số URL
         const cartItems = await services.getCartItemsByCartId(cartId);
+
+        // Kiểm tra nếu không tìm thấy cartItems
+        if (!cartItems || cartItems.length === 0) {
+            return res.status(404).json({ error: 'No cart items found for this cart ID' });
+        }
+
         return res.status(200).json(cartItems);
     } catch (error) {
         console.error('Error in fetchCartItemsByCartId controller:', error);
