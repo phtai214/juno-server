@@ -123,6 +123,9 @@ export const updateUser = async (userId, newData, fileData) => {
         if (newData.phonenumber) {
             user.phonenumber = newData.phonenumber;
         }
+        if (newData.status) {
+            user.status = newData.status;
+        }
         if (fileData !== undefined) {
             user.avatar = fileData.path;
         }
